@@ -1,12 +1,10 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os/exec"
+	"time"
 )
 
 // cutCmd represents the cut command
@@ -19,10 +17,25 @@ var cutCmd = &cobra.Command{
 			return fmt.Errorf("no input file specified")
 		}
 		input := args[0]
-		start, _ := cmd.Flags().GetString("start")
-		finish, _ := cmd.Flags().GetString("finish")
-		offAudio, _ := cmd.Flags().GetBool("off-audio")
-		output := fmt.Sprintf("cut_%s", input)
+		var startRaw string
+		var finishRaw string
+		startRaw, _ = cmd.Flags().GetString("start")
+		finishRaw, _ = cmd.Flags().GetString("finish")
+
+		var start string = startRaw
+		if d, err := time.ParseDuration(startRaw); err == nil {
+			start = FormatDurationFFMPEG(d)
+		}
+
+		var finish string = finishRaw
+		if d, err := time.ParseDuration(finishRaw); err == nil {
+			finish = FormatDurationFFMPEG(d)
+		}
+
+		var offAudio bool
+		offAudio, _ = cmd.Flags().GetBool("off-audio")
+
+		var output string = fmt.Sprintf("cut_%s", input)
 		argsFfmpeg := []string{
 			"-hide_banner",
 			"-loglevel",
