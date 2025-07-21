@@ -1,4 +1,4 @@
-module malva
+module github.com/WeAreTheSameBlood/malva-cli
 
 go 1.24
 
