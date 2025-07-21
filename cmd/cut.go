@@ -1,40 +1,64 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"os/exec"
 )
 
 // cutCmd represents the cut command
 var cutCmd = &cobra.Command{
 	Use:   "cut",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Cut a segment from a video file",
+	Long:  `Cut a segment from a video file using start and finish times.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			return fmt.Errorf("no input file specified")
+		}
+		input := args[0]
+		start, _ := cmd.Flags().GetString("start")
+		finish, _ := cmd.Flags().GetString("finish")
+		offAudio, _ := cmd.Flags().GetBool("off-audio")
+		output := fmt.Sprintf("cut_%s", input)
+		argsFfmpeg := []string{
+			"-hide_banner",
+			"-loglevel",
+			"error",
+			"-i",
+			input,
+			"-ss",
+			start,
+			"-to",
+			finish,
+		}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cut called")
+		if offAudio {
+			argsFfmpeg = append(argsFfmpeg, "-an")
+		}
+		argsFfmpeg = append(argsFfmpeg, "-c", "copy", output)
+
+		cmdFfmpeg := exec.Command("ffmpeg", argsFfmpeg...)
+		// cmdFfmpeg.Stdout = os.Stdout
+		// cmdFfmpeg.Stderr = os.Stderr
+		return cmdFfmpeg.Run()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cutCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cutCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cutCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cutCmd.Flags().StringP(
+		"start", "s", "",
+		"start time (HH:MM:SS[.ms])",
+	)
+	cutCmd.Flags().StringP(
+		"finish", "f", "",
+		"finish time (HH:MM:SS[.ms])",
+	)
+	cutCmd.Flags().Bool(
+		"off-audio", false,
+		"remove audio track",
+	)
 }
