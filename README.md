@@ -28,11 +28,23 @@ Remove the audio track:
 mlv cut input.mp4 --start 00:01:00 --finish 00:02:30 --off-audio
 ```
 
+### Supported time formats
+
+You can specify time positions using any of these formats:
+
+- `HH:MM:SS` (e.g., `00:01:05`)
+- `HH:MM:SS.ms` (e.g., `00:01:05.500`)
+- Shorthand durations as accepted by Go’s `time.ParseDuration`:
+  - `14s`
+  - `1m9s`
+  - `1h0m34s430ms`
+  - `500ms`
+
 ## Available Commands
 
 - `mlv cut`  
-  Cut a segment from a video file  
-  Flags:
-    - `--start`, `-s` <HH:MM:SS[.ms]>
-    - `--finish`, `-f` <HH:MM:SS[.ms]>
-    - `--off-audio` (remove audio track)
+  Cut a segment from a video file.
+  **Flags:**
+  - `--start`, `-s` <HH:MM:SS[.ms]> — start time  
+  - `--finish`, `-f` <HH:MM:SS[.ms]> — finish time  
+  - `--off-audio` — remove audio track

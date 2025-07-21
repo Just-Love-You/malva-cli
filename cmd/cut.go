@@ -11,7 +11,7 @@ import (
 var cutCmd = &cobra.Command{
 	Use:   "cut",
 	Short: "Cut a segment from a video file",
-	Long:  `Cut a segment from a video file using start and finish times.`,
+	Long:  `Cut a segment from a video file using start and finish times`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return fmt.Errorf("no input file specified")

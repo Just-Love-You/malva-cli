@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -13,7 +10,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "mlv",
 	Short: "Malva CLI for trimming and watermarking videos",
-	Long:  `mlv is a command-line tool to cut MP4 videos, overlay PNG watermarks and swap audio tracks in parallel.`,
+	Long:  `Malva (mlv) is a command-line tool to cut MP4 videos, overlay PNG watermarks and remove / swap audio tracks`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
