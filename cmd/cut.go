@@ -1,77 +1,66 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/spf13/cobra"
-	"os/exec"
 	"time"
+
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
+	"github.com/spf13/cobra"
 )
 
-// cutCmd represents the cut command
+// cutCmd represents the 'cut' command
 var cutCmd = &cobra.Command{
-	Use:   "cut",
+	Use:   "cut <file>",
 	Short: "Cut a segment from a video file",
 	Long:  `Cut a segment from a video file using start and finish times`,
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			return fmt.Errorf("no input file specified")
-		}
 		input := args[0]
-		var startRaw string
-		var finishRaw string
-		startRaw, _ = cmd.Flags().GetString("start")
-		finishRaw, _ = cmd.Flags().GetString("finish")
 
-		var start string = startRaw
+		// collect flags into opts
+		var opts helpers.CutOptions
+
+		// parse start (supports durations like "14s", "1m9s", "1h2m3s500ms")
+		startRaw, _ := cmd.Flags().GetString("start")
 		if d, err := time.ParseDuration(startRaw); err == nil {
-			start = FormatDurationFFMPEG(d)
+			opts.Start = helpers.FormatDurationFFMPEG(d)
+		} else {
+			opts.Start = startRaw
 		}
 
-		var finish string = finishRaw
+		// parse finish
+		finishRaw, _ := cmd.Flags().GetString("finish")
 		if d, err := time.ParseDuration(finishRaw); err == nil {
-			finish = FormatDurationFFMPEG(d)
+			opts.Finish = helpers.FormatDurationFFMPEG(d)
+		} else {
+			opts.Finish = finishRaw
 		}
 
-		var offAudio bool
-		offAudio, _ = cmd.Flags().GetBool("off-audio")
+		// other flags
+		opts.OffAudio, _ = cmd.Flags().GetBool("off-audio")
+		opts.Output, _ = cmd.Flags().GetString("output")
 
-		var output string = fmt.Sprintf("cut_%s", input)
-		argsFfmpeg := []string{
-			"-hide_banner",
-			"-loglevel",
-			"error",
-			"-i",
-			input,
-			"-ss",
-			start,
-			"-to",
-			finish,
-		}
-
-		if offAudio {
-			argsFfmpeg = append(argsFfmpeg, "-an")
-		}
-		argsFfmpeg = append(argsFfmpeg, "-c", "copy", output)
-
-		cmdFfmpeg := exec.Command("ffmpeg", argsFfmpeg...)
-		// cmdFfmpeg.Stdout = os.Stdout
-		// cmdFfmpeg.Stderr = os.Stderr
-		return cmdFfmpeg.Run()
+		// execute
+		return helpers.ProcessCut(input, opts)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cutCmd)
+
 	cutCmd.Flags().StringP(
 		"start", "s", "",
-		"start time (HH:MM:SS[.ms])",
+		"start time (HH:MM:SS[.ms] or Go duration, e.g. 14s, 1m9s)",
 	)
 	cutCmd.Flags().StringP(
 		"finish", "f", "",
-		"finish time (HH:MM:SS[.ms])",
+		"finish time (HH:MM:SS[.ms] or Go duration)",
 	)
 	cutCmd.Flags().Bool(
 		"off-audio", false,
 		"remove audio track",
+	)
+	cutCmd.Flags().StringP(
+		"output", "o", "",
+		"output filename (default cut_<input>)",
 	)
 }

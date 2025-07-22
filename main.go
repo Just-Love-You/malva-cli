@@ -1,10 +1,6 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
-*/
 package main
 
-import "malva/cmd"
+import "github.com/WeAreTheSameBlood/malva-cli/cmd"
 
 func main() {
 	cmd.Execute()
