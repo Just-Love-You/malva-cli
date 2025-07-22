@@ -36,7 +36,6 @@ var cutCmd = &cobra.Command{
 		}
 
 		// other flags
-		opts.OffAudio, _ = cmd.Flags().GetBool("off-audio")
 		opts.Output, _ = cmd.Flags().GetString("output")
 
 		// execute

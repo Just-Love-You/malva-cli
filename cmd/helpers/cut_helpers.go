@@ -8,10 +8,9 @@ import (
 
 // CutOptions holds parameters for the 'cut' command.
 type CutOptions struct {
-	Start    string
-	Finish   string
-	OffAudio bool
-	Output   string
+	Start  string
+	Finish string
+	Output string
 }
 
 // ProcessCut builds ffmpeg arguments and executes the cut command.
@@ -29,9 +28,7 @@ func ProcessCut(input string, opts CutOptions) error {
 		"-ss", opts.Start,
 		"-to", opts.Finish,
 	}
-	if opts.OffAudio {
-		args = append(args, "-an")
-	}
+
 	args = append(args, "-c", "copy", output)
 
 	// execute
