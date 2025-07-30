@@ -29,7 +29,7 @@ func ProcessConvert(
 			"-hide_banner", "-loglevel", "error",
 			"-noautorotate",
 			"-i", input,
-			"-vf", "fps=15,scale=380:-1:flags=lanczos",
+			"-vf", "fps=15,scale=400:-1:flags=lanczos",
 			"-loop", "0",
 			output,
 		}
