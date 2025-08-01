@@ -25,6 +25,9 @@ func ProcessConvert(
 
 	if opts.GIF {
 		output = fmt.Sprintf("%s.gif", base)
+
+		// change target FPS below, bro
+		// I will add some param soon
 		args = []string{
 			"-hide_banner", "-loglevel", "error",
 			"-noautorotate",
