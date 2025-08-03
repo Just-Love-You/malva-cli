@@ -67,7 +67,7 @@ mlv cut test_video.mp4 -s 5s -f 20s -o short.mp4
 && mlv convert final.mp4 –gif –fps 10 –scale 320
 ```
 
-Available Commands Summary
+## Available Commands Summary
 -	mlv cut     
 - - flags: –start/-s, –finish/-f, –off-audio, –output/-o
 -	mlv change  
@@ -75,13 +75,13 @@ Available Commands Summary
 -	mlv convert 
 - - flags: –gif, –fps, –scale
 
-Supported time formats
+### Supported time formats
 
 Any of:
 -	HH:MM:SS (e.g., 00:01:05)
 -	HH:MM:SS.ms (e.g., 00:01:05.500)
 -	Go durations: 14s, 1m9s, 1h0m34s430ms, 500ms
 
-Contributing
+## Contributing
 
-Open issues or submit pull requests on GitHub. Feedback and improvements welcome
+Open issues or submit pull requests. Feedback and improvements welcome
