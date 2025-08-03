@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
 	"os"
 	"os/exec"
 )
@@ -21,7 +22,7 @@ func ProcessChange(input string, opts ChangeOptions) error {
 	// 1. Determine output filename: use provided or default
 	output := opts.Output
 	if output == "" {
-		output = fmt.Sprintf("mod_%s", input)
+		output = fmt.Sprintf(constants.CHANGE_DEFAULT_OUTPUT_NAME_PREFIX, input)
 	}
 
 	// 2. Initialize ffmpeg arguments with basic flags and input file
@@ -49,13 +50,16 @@ func ProcessChange(input string, opts ChangeOptions) error {
 		} else {
 			baseFilter = ""
 		}
+
 		if baseFilter != "" {
 			filterComplex = fmt.Sprintf("[0:v]%s[v0];[v0][1:v]overlay=10:10", baseFilter)
 		} else {
 			filterComplex = "[0:v][1:v]overlay=10:10[v0]"
 		}
+
 		args = append(args, "-i", opts.Watermark, "-filter_complex", filterComplex)
 		args = append(args, "-map", "[v0]")
+
 		if opts.ReplaceAudio == "" {
 			args = append(args, "-map", "0:a")
 		}

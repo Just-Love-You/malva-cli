@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
 	"os/exec"
 	"time"
 )
@@ -18,7 +19,7 @@ func ProcessCut(input string, opts CutOptions) error {
 	// determine output filename
 	output := opts.Output
 	if output == "" {
-		output = fmt.Sprintf("cut_%s", input)
+		output = fmt.Sprintf(constants.CUT_DEFAULT_OUTPUT_NAME_PREFIX, input)
 	}
 
 	// build ffmpeg args

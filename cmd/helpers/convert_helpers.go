@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -9,7 +10,9 @@ import (
 
 // ConvertOptions holds flags for the 'convert' command.
 type ConvertOptions struct {
-	GIF bool
+	GIF   bool
+	FPS   int
+	Scale int
 }
 
 // ProcessConvert runs ffmpeg to convert according to opts.
@@ -24,15 +27,26 @@ func ProcessConvert(
 	var args []string
 
 	if opts.GIF {
+		// fallback defaults if user passed zero or invalid
+		if opts.FPS <= 0 {
+			opts.FPS = constants.CONVERT_DEFAULT_FPS
+		}
+		if opts.Scale <= 0 {
+			opts.Scale = constants.CONVERT_DEFAULT_SCALE
+		}
+
 		output = fmt.Sprintf("%s.gif", base)
 
-		// change target FPS below, bro
-		// I will add some param soon
+		filter := fmt.Sprintf(
+			"fps=%d,scale=%d:-1:flags=lanczos",
+			opts.FPS,
+			opts.Scale)
+
 		args = []string{
 			"-hide_banner", "-loglevel", "error",
 			"-noautorotate",
 			"-i", input,
-			"-vf", "fps=15,scale=400:-1:flags=lanczos",
+			"-vf", filter,
 			"-loop", "0",
 			output,
 		}

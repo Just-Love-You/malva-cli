@@ -48,15 +48,11 @@ func init() {
 
 	cutCmd.Flags().StringP(
 		"start", "s", "",
-		"start time (HH:MM:SS[.ms] or Go duration, e.g. 14s, 1m9s)",
+		"start time (HH:MM:SS[.ms], e.g. 14s, 1m9s)",
 	)
 	cutCmd.Flags().StringP(
 		"finish", "f", "",
-		"finish time (HH:MM:SS[.ms] or Go duration)",
-	)
-	cutCmd.Flags().Bool(
-		"off-audio", false,
-		"remove audio track",
+		"finish time (HH:MM:SS[.ms])",
 	)
 	cutCmd.Flags().StringP(
 		"output", "o", "",

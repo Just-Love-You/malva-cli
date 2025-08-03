@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,7 @@ var changeCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(changeCmd)
 	changeCmd.Flags().Bool(
-		"remove-audio", false,
+		"remove-audio", constants.CHANGE_REMOVE_AUDIO,
 		"remove audio track",
 	)
 	changeCmd.Flags().String(
