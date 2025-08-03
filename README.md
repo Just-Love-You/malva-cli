@@ -1,6 +1,14 @@
 # Malva CLI
 
-Malva (`mlv`) is a command-line tool for cutting MP4 videos, removing audio tracks, overlaying PNG watermarks, and replacing audio in parallel
+Fast Go CLI wrapping ffmpeg for video processing: cut segments, remove audio, overlay PNG watermarks, resize with aspect ratio preservation, and convert to animated GIFs with custom fps/scale.
+
+## Features
+
+- cut video segments (`cut`)
+- change video (remove audio, watermark, resize, replace audio) (`change`)
+- convert to GIF with adjustable fps and width (`convert`)
+- smart duration parsing: `HH:MM:SS`, `HH:MM:SS.ms`, `14s`, `1m9s`, `1h0m34s430ms`, `500ms`
+- MP4 faststart support for better preview (quick look)
 
 ## Installation
 
@@ -8,43 +16,72 @@ later...
 
 ## Usage
 
-### Cut a video segment
+### Cut
 
-Cut from `00:00:10` to `00:00:20` and save as `cut_input.mp4`:
-
+Cut a segment:
 ```bash
-mlv cut input.mp4 --start 00:00:10 --finish 00:00:20
+mlv cut input.mp4 –start 00:00:10 –finish 00:00:20 -o new_segment_name.mp4
 ```
 
-Use short flags:
+### Change
+
+Remove audio:
 
 ```bash
-mlv cut input.mp4 -s 00:00:05 -f 00:00:15
+mlv change input.mp4 –remove-audio -o noaudio.mp4
 ```
 
-Remove the audio track:
-
+Resize by height / width:
 ```bash
-mlv cut input.mp4 --start 00:01:00 --finish 00:02:30 --off-audio
+mlv change input.mp4 –resize-height 720 -o resized.mp4
+# or
+mlv change input.mp4 –resize-width 480 -o resized_w.mp4
 ```
 
-### Supported time formats
+Add watermark:
+```bash
+mlv change input.mp4 –watermark logo.png -o watermarked.mp4
+```
 
-You can specify time positions using any of these formats:
+Combine resize + watermark + remove audio:
+```bash
+mlv change input.mp4 –resize-height 720 –watermark logo.png –remove-audio -o combo.mp4
+```
 
-- `HH:MM:SS` (e.g., `00:01:05`)
-- `HH:MM:SS.ms` (e.g., `00:01:05.500`)
-- Shorthand durations as accepted by Go’s `time.ParseDuration`:
-  - `14s`
-  - `1m9s`
-  - `1h0m34s430ms`
-  - `500ms`
+### Convert
 
-## Available Commands
+Convert to GIF with defaults:
+```bash
+mlv convert input.mp4 –gif
+```
 
-- `mlv cut`  
-  Cut a segment from a video file.
-  **Flags:**
-  - `--start`, `-s` <HH:MM:SS[.ms]> — start time  
-  - `--finish`, `-f` <HH:MM:SS[.ms]> — finish time  
-  - `--off-audio` — remove audio track
+Custom fps and scale:
+```bash
+mlv convert input.mp4 –gif –fps 20 –scale 320
+```
+
+Combined example (cut → change → GIF)
+```bash
+mlv cut test_video.mp4 -s 5s -f 20s -o short.mp4 
+&& mlv change short.mp4 –remove-audio –resize-width 480 –watermark logo.png -o final.mp4 
+&& mlv convert final.mp4 –gif –fps 10 –scale 320
+```
+
+Available Commands Summary
+-	mlv cut     
+- - flags: –start/-s, –finish/-f, –off-audio, –output/-o
+-	mlv change  
+- - flags: –remove-audio, –watermark, –replace-audio, –resize-height, –resize-width, –output/-o
+-	mlv convert 
+- - flags: –gif, –fps, –scale
+
+Supported time formats
+
+Any of:
+-	HH:MM:SS (e.g., 00:01:05)
+-	HH:MM:SS.ms (e.g., 00:01:05.500)
+-	Go durations: 14s, 1m9s, 1h0m34s430ms, 500ms
+
+Contributing
+
+Open issues or submit pull requests on GitHub. Feedback and improvements welcome
