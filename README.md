@@ -12,7 +12,44 @@ Fast Go CLI wrapping ffmpeg for video processing: cut segments, remove audio, ov
 
 ## Installation
 
-later...
+### via Homebrew (recommended)
+
+Tap the formula and install:
+```bash
+brew tap Just-Love-You/homebrew-malva-cli  
+brew install mlv
+
+# or single command call
+
+brew install just-love-you/malva-cli/mlv
+```
+
+To upgrade later:
+```bash
+brew update && brew upgrade mlv
+```
+
+To uninstall:
+```bash
+brew uninstall mlv
+```
+
+### from source (manual)
+
+Clone/build yourself:
+```bash
+git clone https://github.com/Just-Love-You/malva-cli.git  
+cd malva-cli  
+go build -o mlv  
+sudo mv mlv /usr/local/bin/
+```
+
+### Verification
+
+Run:
+```bash
+mlv --help
+```
 
 ## Usage
 
@@ -68,12 +105,9 @@ mlv cut test_video.mp4 -s 5s -f 20s -o short.mp4
 ```
 
 ## Available Commands Summary
--	mlv cut     
-- - flags: –start/-s, –finish/-f, –off-audio, –output/-o
--	mlv change  
-- - flags: –remove-audio, –watermark, –replace-audio, –resize-height, –resize-width, –output/-o
--	mlv convert 
-- - flags: –gif, –fps, –scale
+- mlv cut: –start / -s, –finish / -f, –off-audio, –output / -o 
+- mlv change: –remove-audio, –watermark, –replace-audio, –resize-height, –resize-width, –output / -o
+- mlv convert: –gif, –fps, –scale
 
 ### Supported time formats
 
