@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers/tasks"
 	"time"
 
-	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,7 @@ var cutCmd = &cobra.Command{
 		input := args[0]
 
 		// collect flags into opts
-		var opts helpers.CutOptions
+		var opts tasks.CutOptions
 
 		// parse start (supports durations like "14s", "1m9s", "1h2m3s500ms")
 		startRaw, _ := cmd.Flags().GetString("start")
@@ -39,7 +40,7 @@ var cutCmd = &cobra.Command{
 		opts.Output, _ = cmd.Flags().GetString("output")
 
 		// execute
-		return helpers.ProcessCut(input, opts)
+		return tasks.ProcessCut(input, opts)
 	},
 }
 

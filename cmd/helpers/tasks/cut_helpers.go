@@ -1,10 +1,9 @@
-package helpers
+package tasks
 
 import (
 	"fmt"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
-	"os/exec"
-	"time"
+	progress "github.com/WeAreTheSameBlood/malva-cli/cmd/subservices"
 )
 
 // CutOptions holds parameters for the 'cut' command.
@@ -35,17 +34,9 @@ func ProcessCut(
 
 	args = append(args, "-c", "copy", output)
 
-	// execute
-	cmd := exec.Command("ffmpeg", args...)
-	return cmd.Run()
-}
-
-// FormatDurationFFMPEG converts a time.Duration to "HH:MM:SS.ms" format for ffmpeg
-func FormatDurationFFMPEG(d time.Duration) string {
-	totalMillis := d.Milliseconds()
-	h := totalMillis / 3600000
-	m := (totalMillis % 3600000) / 60000
-	s := (totalMillis % 60000) / 1000
-	ms := totalMillis % 1000
-	return fmt.Sprintf("%02d:%02d:%02d.%03d", h, m, s, ms)
+	return progress.RunWithProgress(
+		progress.OperationCut,
+		input,
+		args,
+	)
 }

@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers/tasks"
 	"github.com/spf13/cobra"
-
-	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
 )
 
 // convertCmd represents the 'convert' command
@@ -16,12 +15,12 @@ var convertCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		input := args[0]
 
-		var opts helpers.ConvertOptions
+		var opts tasks.ConvertOptions
 		opts.GIF, _ = cmd.Flags().GetBool("gif")
 		opts.FPS, _ = cmd.Flags().GetInt("fps")
 		opts.Scale, _ = cmd.Flags().GetInt("scale")
 
-		return helpers.ProcessConvert(input, opts)
+		return tasks.ProcessConvert(input, opts)
 	},
 }
 
