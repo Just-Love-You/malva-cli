@@ -18,7 +18,10 @@ type ChangeOptions struct {
 }
 
 // ProcessChange builds ffmpeg arguments and executes the command based on ChangeOptions.
-func ProcessChange(input string, opts ChangeOptions) error {
+func ProcessChange(
+	input string,
+	opts ChangeOptions,
+) error {
 	// 1. Determine output filename: use provided or default
 	output := opts.Output
 	if output == "" {

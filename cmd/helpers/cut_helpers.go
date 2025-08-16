@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
 	"os/exec"
-	"regexp"
-	"strconv"
 	"time"
 )
 
@@ -16,10 +14,11 @@ type CutOptions struct {
 	Output string
 }
 
-var timeRe = regexp.MustCompile(`time=(\d+):(\d+):(\d+\.?\d*)`)
-
 // ProcessCut builds ffmpeg arguments and executes the cut command.
-func ProcessCut(input string, opts CutOptions) error {
+func ProcessCut(
+	input string,
+	opts CutOptions,
+) error {
 	// determine output filename
 	output := opts.Output
 	if output == "" {
@@ -49,12 +48,4 @@ func FormatDurationFFMPEG(d time.Duration) string {
 	s := (totalMillis % 60000) / 1000
 	ms := totalMillis % 1000
 	return fmt.Sprintf("%02d:%02d:%02d.%03d", h, m, s, ms)
-}
-
-func parseFFmpegTime(hours, mins, sec string) float64 {
-	hh, _ := strconv.Atoi(hours)
-	mm, _ := strconv.Atoi(mins)
-	ss, _ := strconv.ParseFloat(sec, 64)
-
-	return float64(hh)*3600 + float64(mm)*60 + ss
 }
