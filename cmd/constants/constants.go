@@ -1,5 +1,13 @@
 package constants
 
+// MARK: - Constant Arguments
+
+var COMMON_FFMPEG_ARGUMENTS = []string{
+	"-hide_banner",
+	"-loglevel", "info",
+	"-progress", "pipe:1",
+}
+
 // MARK: - Cut constants
 
 const (
@@ -11,8 +19,8 @@ const (
 const (
 	CHANGE_DEFAULT_OUTPUT_NAME_PREFIX string = "changed_%s"
 	CHANGE_REMOVE_AUDIO               bool   = false
-	CHANGE_DEAULT_RESIZE_HEIGHT       int    = 0
-	CHANGE_DEAULT_RESIZE_WIDTH        int    = 0
+	CHANGE_DEFAULT_RESIZE_HEIGHT      int    = 0
+	CHANGE_DEFAULT_RESIZE_WIDTH       int    = 0
 )
 
 // MARK: - Convert constants

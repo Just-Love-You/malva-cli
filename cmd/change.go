@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
-	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
+	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers/tasks"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ var changeCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		input := args[0]
-		var opts helpers.ChangeOptions
+		var opts tasks.ChangeOptions
 		opts.RemoveAudio, _ = cmd.Flags().GetBool("remove-audio")
 		opts.Watermark, _ = cmd.Flags().GetString("watermark")
 		opts.ReplaceAudio, _ = cmd.Flags().GetString("replace-audio")
@@ -21,7 +21,7 @@ var changeCmd = &cobra.Command{
 		opts.ResizeHeight, _ = cmd.Flags().GetInt("resize-height")
 		opts.ResizeWidth, _ = cmd.Flags().GetInt("resize-width")
 
-		return helpers.ProcessChange(input, opts)
+		return tasks.ProcessChange(input, opts)
 	},
 }
 
@@ -44,11 +44,11 @@ func init() {
 		"", "output filename (default mod_<input>)",
 	)
 	changeCmd.Flags().Int(
-		"resize-height", 0,
+		"resize-height", constants.CHANGE_DEFAULT_RESIZE_HEIGHT,
 		"resize video to this height, preserving aspect ratio",
 	)
 	changeCmd.Flags().Int(
-		"resize-width", 0,
+		"resize-width", constants.CHANGE_DEFAULT_RESIZE_WIDTH,
 		"resize video to this width, preserving aspect ratio",
 	)
 }
