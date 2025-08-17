@@ -20,7 +20,7 @@ A clear and concise description of what you expected to happen and what was in o
  - OS: [e.g. Arch Linux x86-64]
  - Version [e.g. Kernel Version: 6.15.8]
 
-**Smartphone (please complete the following information):**
+**Laptop:**
  - OS: [e.g.MacOS]
  - Version [e.g. 15.3]
 
