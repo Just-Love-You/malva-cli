@@ -8,7 +8,7 @@ import (
 
 // convertCmd represents the 'convert' command
 var convertCmd = &cobra.Command{
-	Use:   "convert <file>",
+	Use:   "convert <file.ext> <arguments>",
 	Short: "Convert video to another format",
 	Long:  `Convert a video file into a different format (e.g. GIF).`,
 	Args:  cobra.ExactArgs(1),

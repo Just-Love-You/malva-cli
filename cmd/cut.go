@@ -10,7 +10,7 @@ import (
 
 // cutCmd represents the 'cut' command
 var cutCmd = &cobra.Command{
-	Use:   "cut <file.ext> -start 2s -finish 52s",
+	Use:   "cut <file.ext> <arguments>",
 	Short: "Cut a segment from a video file",
 	Long:  `Cut a segment from a video file using start and finish times`,
 	Args:  cobra.ExactArgs(1),
@@ -48,7 +48,7 @@ func init() {
 	rootCmd.AddCommand(cutCmd)
 
 	cutCmd.Flags().StringP(
-		"start", "s", "",
+		"start", "s", "0s",
 		"start time (HH:MM:SS[.ms], e.g. 14s, 1m9s)",
 	)
 	cutCmd.Flags().StringP(
@@ -57,6 +57,6 @@ func init() {
 	)
 	cutCmd.Flags().StringP(
 		"output", "o", "",
-		"output filename (default cut_<input>)",
+		"output filename (default clipped_<input_filename>)",
 	)
 }
