@@ -57,7 +57,7 @@ mlv --help
 
 Cut a segment:
 ```bash
-mlv cut input.mp4 –start 00:00:10 –finish 00:00:20 -o new_segment_name.mp4
+mlv cut input.mp4 –-start 00:00:10 –-finish 00:00:20 -o new_segment_name.mp4
 ```
 
 ### Change
@@ -65,49 +65,49 @@ mlv cut input.mp4 –start 00:00:10 –finish 00:00:20 -o new_segment_name.mp4
 Remove audio:
 
 ```bash
-mlv change input.mp4 –remove-audio -o noaudio.mp4
+mlv change input.mp4 –-remove-audio -o noaudio.mp4
 ```
 
 Resize by height / width:
 ```bash
-mlv change input.mp4 –resize-height 720 -o resized.mp4
+mlv change input.mp4 -–resize-height 720 -o resized.mp4
 # or
-mlv change input.mp4 –resize-width 480 -o resized_w.mp4
+mlv change input.mp4 –-resize-width 480 -o resized_w.mp4
 ```
 
 Add watermark:
 ```bash
-mlv change input.mp4 –watermark logo.png -o watermarked.mp4
+mlv change input.mp4 -–watermark logo.png -o watermarked.mp4
 ```
 
 Combine resize + watermark + remove audio:
 ```bash
-mlv change input.mp4 –resize-height 720 –watermark logo.png –remove-audio -o combo.mp4
+mlv change input.mp4 -–resize-height 720 –-watermark logo.png –-remove-audio -o combo.mp4
 ```
 
 ### Convert
 
 Convert to GIF with defaults:
 ```bash
-mlv convert input.mp4 –gif
+mlv convert input.mp4 -–gif
 ```
 
 Custom fps and scale:
 ```bash
-mlv convert input.mp4 –gif –fps 20 –scale 320
+mlv convert input.mp4 -–gif -–fps 20 -–scale 320
 ```
 
 Combined example (cut → change → GIF)
 ```bash
 mlv cut test_video.mp4 -s 5s -f 20s -o short.mp4 
-&& mlv change short.mp4 –remove-audio –resize-width 480 –watermark logo.png -o final.mp4 
-&& mlv convert final.mp4 –gif –fps 10 –scale 320
+&& mlv change short.mp4 –-remove-audio –-resize-width 480 –-watermark logo.png -o final.mp4 
+&& mlv convert final.mp4 –-gif –-fps 10 –-scale 320
 ```
 
 ## Available Commands Summary
-- mlv cut: –start / -s, –finish / -f, –off-audio, –output / -o 
-- mlv change: –remove-audio, –watermark, –replace-audio, –resize-height, –resize-width, –output / -o
-- mlv convert: –gif, –fps, –scale
+- mlv cut: –-start / -s, –-finish / -f, –-off-audio, -–output / -o 
+- mlv change: -–remove-audio, -–watermark, -–replace-audio, –-resize-height, –-resize-width, –-output / -o
+- mlv convert: -–gif, –-fps, -–scale
 
 ### Supported time formats
 
