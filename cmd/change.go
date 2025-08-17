@@ -44,11 +44,11 @@ func init() {
 		"", "output filename (default mod_<input>)",
 	)
 	changeCmd.Flags().Int(
-		"resize-height", 0,
+		"resize-height", constants.CHANGE_DEFAULT_RESIZE_HEIGHT,
 		"resize video to this height, preserving aspect ratio",
 	)
 	changeCmd.Flags().Int(
-		"resize-width", 0,
+		"resize-width", constants.CHANGE_DEFAULT_RESIZE_WIDTH,
 		"resize video to this width, preserving aspect ratio",
 	)
 }

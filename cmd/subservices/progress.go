@@ -46,7 +46,7 @@ func RunWithProgress(
 
 	// Start ffmpeg
 	var resultCommand = exec.Command("ffmpeg", ffmpegArgs...)
-	var stderr, _ = resultCommand.StderrPipe()
+	var progressPipe, _ = resultCommand.StdoutPipe()
 
 	if runError := resultCommand.Start(); runError != nil {
 		return runError
@@ -54,11 +54,11 @@ func RunWithProgress(
 
 	// Progress loop
 	var startTime = time.Now()
-	var stderrScanner = bufio.NewScanner(stderr)
+	var progressScanner = bufio.NewScanner(progressPipe)
 	var lastPercentage = -1
 
-	for stderrScanner.Scan() {
-		var scannedLine = stderrScanner.Text()
+	for progressScanner.Scan() {
+		var scannedLine = progressScanner.Text()
 		var matchParts = timeRe.FindStringSubmatch(scannedLine)
 		if matchParts != nil {
 			// parse current ffmpeg time into seconds
@@ -67,7 +67,7 @@ func RunWithProgress(
 				matchParts[2], // minutes
 				matchParts[3], // seconds.milliseconds
 			)
-			// compute raw percentage
+			// compute raw percentage round to int
 			var ratio = currentSeconds / totalSeconds
 			var rawPercentage = int(ratio*100 + 0.5)
 

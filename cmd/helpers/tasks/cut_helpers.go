@@ -24,19 +24,21 @@ func ProcessCut(
 		output = fmt.Sprintf(constants.CUT_DEFAULT_OUTPUT_NAME_PREFIX, input)
 	}
 
-	// build ffmpeg args
-	args := []string{
-		"-hide_banner", "-loglevel", "error",
+	// build ffmpeg argsCut
+	argsCut := []string{
+		"-hide_banner",
+		"-loglevel", "info",
+		"-progress", "pipe:1",
 		"-i", input,
 		"-ss", opts.Start,
 		"-to", opts.Finish,
 	}
 
-	args = append(args, "-c", "copy", output)
+	argsCut = append(argsCut, "-c", "copy", output)
 
 	return progress.RunWithProgress(
 		progress.OperationCut,
 		input,
-		args,
+		argsCut,
 	)
 }

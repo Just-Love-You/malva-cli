@@ -10,7 +10,7 @@ import (
 
 // cutCmd represents the 'cut' command
 var cutCmd = &cobra.Command{
-	Use:   "cut <file>",
+	Use:   "cut <file.ext> -start 2s -finish 52s",
 	Short: "Cut a segment from a video file",
 	Long:  `Cut a segment from a video file using start and finish times`,
 	Args:  cobra.ExactArgs(1),

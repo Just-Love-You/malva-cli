@@ -14,8 +14,8 @@ func ParseFFmpegTime(hours, minutes, seconds string) float64 {
 }
 
 // FormatDurationFFMPEG converts a time.Duration to "HH:MM:SS.ms" format for ffmpeg
-func FormatDurationFFMPEG(d time.Duration) string {
-	totalMillis := d.Milliseconds()
+func FormatDurationFFMPEG(duration time.Duration) string {
+	totalMillis := duration.Milliseconds()
 	h := totalMillis / 3600000
 	m := (totalMillis % 3600000) / 60000
 	s := (totalMillis % 60000) / 1000

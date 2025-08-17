@@ -3,8 +3,8 @@ package tasks
 import (
 	"fmt"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
+	progress "github.com/WeAreTheSameBlood/malva-cli/cmd/subservices"
 	"os"
-	"os/exec"
 )
 
 // ChangeOptions holds parameters for the 'change' command.
@@ -22,34 +22,40 @@ func ProcessChange(
 	input string,
 	opts ChangeOptions,
 ) error {
-	// 1. Determine output filename: use provided or default
+	// Determine output filename: use provided or default
 	output := opts.Output
 	if output == "" {
 		output = fmt.Sprintf(constants.CHANGE_DEFAULT_OUTPUT_NAME_PREFIX, input)
 	}
 
-	// 2. Initialize ffmpeg arguments with basic flags and input file
-	args := []string{"-hide_banner", "-loglevel", "error", "-i", input}
-
-	// 3. Remove audio track if requested
-	if opts.RemoveAudio {
-		args = append(args, "-an")
+	// Initialize ffmpeg arguments with basic flags and input file
+	argsChange := []string{
+		"-hide_banner",
+		"-loglevel", "info",
+		"-progress", "pipe:1",
+		"-i", input,
 	}
 
-	// 4. Prepare video filters: watermark overlay and resize
+	// Remove audio track if requested
+	if opts.RemoveAudio {
+		argsChange = append(argsChange, "-an")
+	}
+
+	// Prepare video filters and flags: watermark overlay and resize
 	var filterComplex string
-	var hasResize bool = opts.ResizeHeight > 0 || opts.ResizeWidth > 0
+	var hasResize bool = opts.ResizeHeight > constants.CHANGE_DEFAULT_RESIZE_HEIGHT ||
+		opts.ResizeWidth > constants.CHANGE_DEFAULT_RESIZE_WIDTH
 	var hasWatermark bool = opts.Watermark != ""
 	var hasFilter bool = hasResize || hasWatermark
 
 	if hasWatermark {
-		// 4.1. Check watermark file existence
+		// Check watermark file existence
 		if _, err := os.Stat(opts.Watermark); err != nil {
 			return fmt.Errorf("watermark file not found: %s", opts.Watermark)
 		}
 
 		// add watermark as second input
-		args = append(args, "-i", opts.Watermark)
+		argsChange = append(argsChange, "-i", opts.Watermark)
 
 		if hasResize {
 			var baseFilter string
@@ -65,14 +71,14 @@ func ProcessChange(
 			filterComplex = "[0:v][1:v]overlay=10:10[v0]"
 		}
 
-		args = append(args, "-filter_complex", filterComplex)
+		argsChange = append(argsChange, "-filter_complex", filterComplex)
 
 		// map filtered video
-		args = append(args, "-map", "[v0]")
+		argsChange = append(argsChange, "-map", "[v0]")
 
 		// map audio only if not removed and not replaced
 		if opts.ReplaceAudio == "" && !opts.RemoveAudio {
-			args = append(args, "-map", "0:a")
+			argsChange = append(argsChange, "-map", "0:a")
 		}
 	} else if hasResize {
 		var vf string
@@ -81,43 +87,42 @@ func ProcessChange(
 		} else {
 			vf = fmt.Sprintf("scale=%d:-2", opts.ResizeWidth)
 		}
-		args = append(args, "-vf", vf)
+		argsChange = append(argsChange, "-vf", vf)
 	}
 
-	// 5. Replace audio track if requested
+	// Replace audio track if requested
 	if opts.ReplaceAudio != "" {
 		if _, err := os.Stat(opts.ReplaceAudio); err != nil {
 			return fmt.Errorf("audio file not found: %s", opts.ReplaceAudio)
 		}
-		args = append(args, "-i", opts.ReplaceAudio)
+		argsChange = append(argsChange, "-i", opts.ReplaceAudio)
 
 		// if HAVE watermark 		--> outputs: 0=video, 1=watermark, 2=replaceAudio
 		// if DO NOT HAVE watermark --> outputs: 0=video, 1=replaceAudio
 		if hasWatermark {
-			args = append(args, "-map", "2:a")
+			argsChange = append(argsChange, "-map", "2:a")
 		} else {
-			args = append(args, "-map", "1:a")
+			argsChange = append(argsChange, "-map", "1:a")
 		}
 	}
 
-	// 6. Choose codec and format: copy or re-encode with faststart
+	// Choose codec and format: copy or re-encode with fast start
 	if hasFilter || opts.ReplaceAudio != "" {
-		args = append(args, "-c:v", "libx264")
+		argsChange = append(argsChange, "-c:v", "libx264")
 		if opts.ReplaceAudio != "" {
-			args = append(args, "-c:a", "aac")
+			argsChange = append(argsChange, "-c:a", "aac")
 		} else if !opts.RemoveAudio {
-			args = append(args, "-c:a", "copy")
+			argsChange = append(argsChange, "-c:a", "copy")
 		}
 	} else {
-		args = append(args, "-c", "copy")
+		argsChange = append(argsChange, "-c", "copy")
 	}
 
-	// 7. Specify output file
-	args = append(args, output)
-
-	// 8. Execute ffmpeg command
-	cmd := exec.Command("ffmpeg", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	// Specify output file
+	argsChange = append(argsChange, output)
+	return progress.RunWithProgress(
+		progress.OperationChange,
+		input,
+		argsChange,
+	)
 }

@@ -3,7 +3,7 @@ package tasks
 import (
 	"fmt"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/constants"
-	"os/exec"
+	progress "github.com/WeAreTheSameBlood/malva-cli/cmd/subservices"
 	"path/filepath"
 	"strings"
 )
@@ -24,7 +24,7 @@ func ProcessConvert(
 	base := strings.TrimSuffix(input, ext)
 
 	var output string
-	var args []string
+	var argsConvert []string
 
 	if opts.GIF {
 		// fallback defaults if user passed zero or invalid
@@ -42,8 +42,10 @@ func ProcessConvert(
 			opts.FPS,
 			opts.Scale)
 
-		args = []string{
-			"-hide_banner", "-loglevel", "error",
+		argsConvert = []string{
+			"-hide_banner",
+			"-loglevel", "info",
+			"-progress", "pipe:1",
 			"-noautorotate",
 			"-i", input,
 			"-vf", filter,
@@ -54,8 +56,9 @@ func ProcessConvert(
 		return fmt.Errorf("no conversion format specified")
 	}
 
-	cmd := exec.Command("ffmpeg", args...)
-	cmd.Stdout = nil
-	cmd.Stderr = nil
-	return cmd.Run()
+	return progress.RunWithProgress(
+		progress.OperationConvert,
+		input,
+		argsConvert,
+	)
 }
