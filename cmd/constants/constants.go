@@ -1,5 +1,13 @@
 package constants
 
+// MARK: - Constant Arguments
+
+var COMMON_FFMPEG_ARGUMENTS = []string{
+	"-hide_banner",
+	"-loglevel", "info",
+	"-progress", "pipe:1",
+}
+
 // MARK: - Cut constants
 
 const (

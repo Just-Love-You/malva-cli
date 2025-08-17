@@ -25,16 +25,15 @@ func ProcessCut(
 	}
 
 	// build ffmpeg argsCut
-	argsCut := []string{
-		"-hide_banner",
-		"-loglevel", "info",
-		"-progress", "pipe:1",
+	var argsCut = append([]string{}, constants.COMMON_FFMPEG_ARGUMENTS...)
+	argsCut = append(
+		argsCut,
 		"-i", input,
 		"-ss", opts.Start,
 		"-to", opts.Finish,
-	}
-
-	argsCut = append(argsCut, "-c", "copy", output)
+		"-c", "copy",
+		output,
+	)
 
 	return progress.RunWithProgress(
 		progress.OperationCut,

@@ -24,7 +24,7 @@ func ProcessConvert(
 	base := strings.TrimSuffix(input, ext)
 
 	var output string
-	var argsConvert []string
+	var argsConvert = append([]string{}, constants.COMMON_FFMPEG_ARGUMENTS...)
 
 	if opts.GIF {
 		// fallback defaults if user passed zero or invalid
@@ -42,16 +42,13 @@ func ProcessConvert(
 			opts.FPS,
 			opts.Scale)
 
-		argsConvert = []string{
-			"-hide_banner",
-			"-loglevel", "info",
-			"-progress", "pipe:1",
-			"-noautorotate",
+		argsConvert = append(
+			argsConvert,
 			"-i", input,
 			"-vf", filter,
 			"-loop", "0",
 			output,
-		}
+		)
 	} else {
 		return fmt.Errorf("no conversion format specified")
 	}

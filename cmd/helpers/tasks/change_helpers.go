@@ -29,12 +29,11 @@ func ProcessChange(
 	}
 
 	// Initialize ffmpeg arguments with basic flags and input file
-	argsChange := []string{
-		"-hide_banner",
-		"-loglevel", "info",
-		"-progress", "pipe:1",
+	var argsChange = append([]string{}, constants.COMMON_FFMPEG_ARGUMENTS...)
+	argsChange = append(
+		argsChange,
 		"-i", input,
-	}
+	)
 
 	// Remove audio track if requested
 	if opts.RemoveAudio {
