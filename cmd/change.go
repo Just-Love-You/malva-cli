@@ -7,7 +7,7 @@ import (
 )
 
 var changeCmd = &cobra.Command{
-	Use:   "change <file>",
+	Use:   "change <file.ext> <arguments>",
 	Short: "Modify video without cutting",
 	Long:  `Apply transformations like removing audio track to a video`,
 	Args:  cobra.ExactArgs(1),
