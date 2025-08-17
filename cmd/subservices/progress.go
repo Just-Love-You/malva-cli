@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/WeAreTheSameBlood/malva-cli/cmd/helpers"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -81,7 +82,8 @@ func RunWithProgress(
 				var filledBars = roundedPercentage * 20 / 100
 				var emptyBars = 20 - filledBars
 
-				fmt.Printf("\r[%s%s] %3d%% %s %s",
+				fmt.Printf(
+					"\r[%s%s] %3d%% %s %s",
 					strings.Repeat("|", filledBars),
 					strings.Repeat("-", emptyBars),
 					roundedPercentage,
@@ -92,11 +94,27 @@ func RunWithProgress(
 		}
 	}
 
-	// Finalise
-	fmt.Printf("\r[%s] 100%% %s %s\n",
+	// Finalise processing results
+	fmt.Printf(
+		"\r[%s] 100%% %s %s\n",
 		strings.Repeat("|", 20),
 		time.Since(startTime).Truncate(time.Second),
 		operation,
 	)
+
+	// Print the output data
+	var outputFilename = ffmpegArgs[len(ffmpegArgs)-1]
+	var absolutePath, absErr = filepath.Abs(outputFilename)
+
+	if absErr != nil {
+		absolutePath = outputFilename
+	}
+
+	fmt.Printf(
+		"Saved as %s\nPath --> %s\n",
+		outputFilename,
+		absolutePath,
+	)
+
 	return resultCommand.Wait()
 }
